@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ thống Quản lý Nhà trọ</title>
+    <link rel="stylesheet" href="css/styles.css">
+</head>
+<body>
+    <header>
+        <h1>🏢 Hệ thống Quản lý Nhà trọ</h1>
+    </header>
+
+    <nav>
+        <a href="#" onclick="showSection('rooms')">Quản lý Phòng</a>
+        <a href="#" onclick="showSection('tenants')">Quản lý Người thuê</a>
+        <a href="#" onclick="showSection('contracts')">Quản lý Hợp đồng</a>
+        <a href="#" onclick="showSection('payments')">Quản lý Thanh toán</a>
+        <a href="#" onclick="showSection('issues')">Quản lý Sự cố</a>
+        <a href="#" onclick="showSection('reports')">Thống kê & Báo cáo</a>
+    </nav>
+
+    <div class="container">
+        <!-- Rooms Section -->
+        <div id="rooms" class="section active">
+            <h2>Quản lý Phòng trọ</h2>
+            
+            <div class="filter-section">
+                <h3>Bộ lọc nhanh</h3>
+                <div class="filter-row">
+                    <div class="search-box">
+                        <input type="text" id="roomSearch" placeholder="Tìm kiếm phòng...">
+                    </div>
+                    <select id="roomFloorFilter">
+                        <option value="">Tất cả tầng</option>
+                        <option value="1">Tầng 1</option>
+                        <option value="2">Tầng 2</option>
+                        <option value="3">Tầng 3</option>
+                    </select>
+                    <select id="roomStatusFilter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="Trống">Trống</option>
+                        <option value="Đã thuê">Đã thuê</option>
+                        <option value="Đang sửa">Đang sửa</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="roomForm">
+                <input type="hidden" id="roomId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mã phòng:</label>
+                        <input type="text" id="roomCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tên phòng:</label>
+                        <input type="text" id="roomName" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Giá phòng (VND):</label>
+                        <input type="number" id="roomPrice" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Diện tích (m²):</label>
+                        <input type="number" id="roomArea" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tầng:</label>
+                        <input type="number" id="roomFloor" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái:</label>
+                        <select id="roomStatus">
+                            <option value="Trống">Trống</option>
+                            <option value="Đã thuê">Đã thuê</option>
+                            <option value="Đang sửa">Đang sửa</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetRoomForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="roomTable">
+                    <thead>
+                        <tr>
+                            <th>Mã phòng</th>
+                            <th>Tên phòng</th>
+                            <th>Tầng</th>
+                            <th>Giá</th>
+                            <th>Diện tích</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Tenants Section -->
+        <div id="tenants" class="section">
+            <h2>Quản lý Người thuê</h2>
+            
+            <div class="filter-section">
+                <h3>Bộ lọc nhanh</h3>
+                <div class="filter-row">
+                    <div class="search-box">
+                        <input type="text" id="tenantSearch" placeholder="Tìm kiếm người thuê...">
+                    </div>
+                </div>
+            </div>
+
+            <form id="tenantForm">
+                <input type="hidden" id="tenantId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Họ tên:</label>
+                        <input type="text" id="tenantName" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Số điện thoại:</label>
+                        <input type="text" id="tenantPhone" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>CCCD/CMND:</label>
+                        <input type="text" id="tenantIdCard" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Địa chỉ thường trú:</label>
+                        <input type="text" id="tenantAddress" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú:</label>
+                    <textarea id="tenantNote"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetTenantForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="tenantTable">
+                    <thead>
+                        <tr>
+                            <th>Họ tên</th>
+                            <th>SĐT</th>
+                            <th>CCCD</th>
+                            <th>Địa chỉ</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Contracts Section -->
+        <div id="contracts" class="section">
+            <h2>Quản lý Hợp đồng</h2>
+            
+            <div class="filter-section">
+                <h3>Bộ lọc nhanh</h3>
+                <div class="filter-row">
+                    <div class="search-box">
+                        <input type="text" id="contractSearch" placeholder="Tìm kiếm hợp đồng...">
+                    </div>
+                </div>
+            </div>
+
+            <form id="contractForm">
+                <input type="hidden" id="contractId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Mã hợp đồng:</label>
+                        <input type="text" id="contractCode" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Người thuê:</label>
+                        <select id="contractTenant" required></select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phòng:</label>
+                        <select id="contractRoom" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Thời hạn hợp đồng:</label>
+                        <input type="number" id="contractDuration" placeholder="Số tháng" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Ngày bắt đầu:</label>
+                        <input type="date" id="contractStart" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Ngày kết thúc:</label>
+                        <input type="date" id="contractEnd">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú:</label>
+                    <textarea id="contractNote"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetContractForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="contractTable">
+                    <thead>
+                        <tr>
+                            <th>Mã hợp đồng</th>
+                            <th>Người thuê</th>
+                            <th>Phòng</th>
+                            <th>Ngày bắt đầu</th>
+                            <th>Ngày kết thúc</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Payments Section -->
+        <div id="payments" class="section">
+            <h2>Quản lý Thanh toán</h2>
+            
+            <div class="filter-section">
+                <h3>Bộ lọc nhanh</h3>
+                <div class="filter-row">
+                    <select id="paymentStatusFilter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="Đã thanh toán">Đã thanh toán</option>
+                        <option value="Chưa thanh toán">Chưa thanh toán</option>
+                        <option value="Quá hạn">Quá hạn</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="paymentForm">
+                <input type="hidden" id="paymentId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Hợp đồng:</label>
+                        <select id="paymentContract" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Tháng/Năm:</label>
+                        <input type="month" id="paymentMonth" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tiền phòng:</label>
+                        <input type="number" id="paymentRent" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Tiền điện:</label>
+                        <input type="number" id="paymentElectricity" required>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tiền nước:</label>
+                        <input type="number" id="paymentWater" required>
+                    </div>
+                    <div class="form-group">
+                        <label>Dịch vụ khác:</label>
+                        <input type="number" id="paymentOther" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" id="paymentPaid">
+                        Đã thanh toán
+                    </label>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetPaymentForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="paymentTable">
+                    <thead>
+                        <tr>
+                            <th>Hợp đồng</th>
+                            <th>Tháng/Năm</th>
+                            <th>Tiền phòng</th>
+                            <th>Điện</th>
+                            <th>Nước</th>
+                            <th>Khác</th>
+                            <th>Tổng</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Issues Section -->
+        <div id="issues" class="section">
+            <h2>Quản lý Sự cố & Bảo trì</h2>
+            
+            <div class="filter-section">
+                <h3>Bộ lọc nhanh</h3>
+                <div class="filter-row">
+                    <select id="issueStatusFilter">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="Mới">Mới</option>
+                        <option value="Đang xử lý">Đang xử lý</option>
+                        <option value="Hoàn thành">Hoàn thành</option>
+                    </select>
+                    <select id="issuePriorityFilter">
+                        <option value="">Tất cả độ ưu tiên</option>
+                        <option value="Cao">Cao</option>
+                        <option value="Trung">Trung</option>
+                        <option value="Thấp">Thấp</option>
+                    </select>
+                </div>
+            </div>
+
+            <form id="issueForm">
+                <input type="hidden" id="issueId">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Phòng:</label>
+                        <select id="issueRoom" required></select>
+                    </div>
+                    <div class="form-group">
+                        <label>Loại sự cố:</label>
+                        <select id="issueType" required>
+                            <option value="">Chọn loại</option>
+                            <option value="Điện">Điện</option>
+                            <option value="Nước">Nước</option>
+                            <option value="Cấu trúc">Cấu trúc</option>
+                            <option value="Khác">Khác</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Độ ưu tiên:</label>
+                        <select id="issuePriority" required>
+                            <option value="Thấp">Thấp</option>
+                            <option value="Trung">Trung</option>
+                            <option value="Cao">Cao</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Trạng thái:</label>
+                        <select id="issueStatus" required>
+                            <option value="Mới">Mới</option>
+                            <option value="Đang xử lý">Đang xử lý</option>
+                            <option value="Hoàn thành">Hoàn thành</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Mô tả:</label>
+                    <textarea id="issueDescription" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Ghi chú / Kết quả xử lý:</label>
+                    <textarea id="issueNotes"></textarea>
+                </div>
+                <div class="button-group">
+                    <button type="submit" class="btn btn-success">Lưu</button>
+                    <button type="button" class="btn btn-secondary" onclick="resetIssueForm()">Reset</button>
+                </div>
+            </form>
+
+            <div class="table-wrapper">
+                <table id="issueTable">
+                    <thead>
+                        <tr>
+                            <th>Phòng</th>
+                            <th>Loại sự cố</th>
+                            <th>Mô tả</th>
+                            <th>Độ ưu tiên</th>
+                            <th>Trạng thái</th>
+                            <th>Ngày tạo</th>
+                            <th>Hành động</th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Reports Section -->
+        <div id="reports" class="section">
+            <h2>Thống kê & Báo cáo</h2>
+            
+            <div class="stats-container">
+                <div class="stat-card green">
+                    <h3>Phòng trống</h3>
+                    <div class="stat-value" id="availableRooms">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Phòng đã thuê</h3>
+                    <div class="stat-value" id="occupiedRooms">0</div>
+                </div>
+                <div class="stat-card orange">
+                    <h3>Chưa thanh toán</h3>
+                    <div class="stat-value" id="unpaidPayments">0</div>
+                </div>
+                <div class="stat-card red">
+                    <h3>Quá hạn thanh toán</h3>
+                    <div class="stat-value" id="overduePayments">0</div>
+                </div>
+            </div>
+
+            <div style="margin-top: 30px;">
+                <h3 style="color: var(--primary-color); margin-bottom: 15px;">Doanh thu</h3>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label>Tháng:</label>
+                        <input type="month" id="reportMonth">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-primary" style="margin-top: 25px;" onclick="generateMonthlyReport()">Xem báo cáo</button>
+                    </div>
+                </div>
+                <div id="reportOutput" style="margin-top: 20px;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script src="js/app.js"></script>
+    <script src="js/rooms.js"></script>
+    <script src="js/tenants.js"></script>
+    <script src="js/contracts.js"></script>
+    <script src="js/payments.js"></script>
+    <script src="js/issues.js"></script>
+    <script src="js/reports.js"></script>
+</body>
+</html>
